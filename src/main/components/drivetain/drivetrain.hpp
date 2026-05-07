@@ -8,14 +8,17 @@ class Drivetrain
 {
 public:
     Drivetrain(Motors motors) : motors(motors) {};
-    Drivetrain();
 
     Motors GetMotors() { return motors; }
 
-    static void velocity(float tilt);
-    static void rotate(float tilt);
+    void SetVelocity(float velocity);
+    void SetRotate(float rotate);
 
 private:
     Motors motors;
-    static Drivetrain instance;
+    float velocity = 0;
+    float rotate = 0;
+
+    void drive();
+    void balance(float rightPct, float rightRpm, float leftPct, float leftRpm);
 };

@@ -1,17 +1,39 @@
 #include "drivetrain.hpp"
 
-void Drivetrain::velocity(float tilt)
+void Drivetrain::SetVelocity(float velocity)
 {
-    instance.GetMotors().spin(tilt);
+    velocity = velocity;
+    drive();
 };
 
-void Drivetrain::rotate(float tilt)
+void Drivetrain::SetRotate(float rotate)
 {
-    for (Motor &motor : instance.motors.GetMotors())
-    {
-        if (motor.GetType() == Motor::Type::Left)
-            motor.spin(tilt);
-        else if (motor.GetType() == Motor::Type::Right)
-            motor.spin(-tilt);
-    }
+    rotate = rotate;
+    drive();
+};
+
+void Drivetrain::balance(float rightPct, float rightRpm, float leftPct, float leftRpm)
+{
+    if (rightPct == 0 || rightRpm == 0)
+        return;
+
+    float pctRatio = leftPct / rightPct;
+    float rpmRatio = leftRpm / rightRpm;
+    float unbalance = rpmRatio / pctRatio;
+
+    if (unbalance > 1)
+        motors.setRpmScalar(1 / unbalance, Motor::Type::Left);
+    else if (unbalance < 1)
+        motors.setRpmScalar(unbalance, Motor::Type::Right);
+};
+
+void Drivetrain::drive()
+{
+    float leftPct = velocity - rotate;
+    float rightPct = velocity + rotate;
+
+    float leftRpm = motors.spin(leftPct, Motor::Type::Left);
+    float rightRpm = motors.spin(rightPct, Motor::Type::Right);
+
+    balance(rightPct, rightRpm, leftPct, leftRpm);
 };

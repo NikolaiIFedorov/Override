@@ -1,13 +1,24 @@
 #pragma once
 
+#include <vector>
+#include <string>
+
 #include "drivetain/drivetrain.hpp"
 #include "controller/controller.hpp"
+#include "brain/brain.hpp"
 #include "code/code.hpp"
 
 struct Init
 {
     Controller *controller;
     Motors driveMotors;
+};
+
+enum class Log
+{
+    Error,
+    Info,
+    Debug
 };
 
 class Src
@@ -27,4 +38,8 @@ private:
 
     static Drivetrain drivetrain;
     static Controller *controller;
+    static Brain brain;
+
+    static void log(std::string &msg, Log level = Log::Info);
+    static void logDisconnected(std::vector<uint8_t> connections);
 };

@@ -15,4 +15,7 @@ public:
     void setupCode();
 
     static Init init();
+
+private:
+    Controller controller;
 };

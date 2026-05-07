@@ -16,3 +16,24 @@ float Controller::value(Action action)
         return controller.Axis1.value();
     }
 };
+
+void Controller::log(std::string &message)
+{
+    static bool init = false;
+    if (!init)
+    {
+        logCount = 0;
+        init = true;
+    }
+
+    if (logCount >= 3)
+        logCount = 0;
+
+    controller.rumble("..");
+    controller.rumble(" ");
+
+    controller.Screen.setCursor(1, logCount + 1);
+    controller.Screen.print(message.c_str());
+
+    logCount++;
+}

@@ -4,14 +4,14 @@ void velocityDrive()
 {
     Controller *controller = Src::GetController();
     Drivetrain *drivetrain = Src::GetDrivetrain();
-    drivetrain->velocity(controller->value(Action::axisRight));
+    drivetrain->SetVelocity(controller->value(Action::axisRight));
 }
 
 void rotateDrive()
 {
     Controller *controller = Src::GetController();
     Drivetrain *drivetrain = Src::GetDrivetrain();
-    drivetrain->rotate(controller->value(Action::axisRight));
+    drivetrain->SetRotate(controller->value(Action::axisRight));
 }
 
 Src::Src()
@@ -33,7 +33,33 @@ void Src::auton()
     instance.autonCode();
 }
 
+void Src::log(std::string &msg, Log level)
+{
+    brain.log(msg, level);
+    if (level == Log::Error)
+        controller->log(msg);
+}
+
+void Src::logDisconnected(std::vector<uint8_t> disconnected)
+{
+    if (disconnected.empty())
+        return;
+
+    std::string msg = "Disconnected motors: ";
+    for (auto &port : disconnected)
+    {
+        msg += (port - '0');
+        if (&port != &disconnected.back())
+            msg += ", ";
+    }
+
+    log(msg, Log::Error);
+}
+
 void Src::setup()
 {
+    std::vector<uint8_t> disconnected = Motors::getDisconnected();
+    logDisconnected(disconnected);
+
     instance.setupCode();
 }
