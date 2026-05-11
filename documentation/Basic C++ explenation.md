@@ -3,6 +3,7 @@
 C++ executes code line by line, like you would do in a recipe. For example, if your code
 
 `<instruction 1>`
+
 `<instruction 2>`
 
 it would execute them in that order of, `<instruction 1>`, `<instruction 2>`.
