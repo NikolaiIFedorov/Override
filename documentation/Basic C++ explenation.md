@@ -19,7 +19,7 @@ C++ also has global and local variables. I won't get in depth of what it means j
 }
 ```
 
-You can use the `globalVariable` anywhere (`{}`), but the `localVariable` is available only inside the curly braces.
+You can use the `globalVariable` anywhere, but the `localVariable` is available only inside the curly braces (`{}`).
 
 ## Basic Data Types
 
