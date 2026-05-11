@@ -23,20 +23,10 @@ Src::Src()
     drivetrain = Drivetrain(init.driveMotors);
 };
 
-void Src::driver()
-{
-    instance.driverCode();
-}
-
-void Src::auton()
-{
-    instance.autonCode();
-}
-
 void Src::log(std::string &msg, Log level)
 {
     brain.log(msg, level);
-    if (level == Log::Error)
+    if (level == Log::Disconnected)
         controller->log(msg);
 }
 
@@ -53,13 +43,30 @@ void Src::logDisconnected(std::vector<uint8_t> disconnected)
             msg += ", ";
     }
 
-    log(msg, Log::Error);
+    log(msg, Log::Disconnected);
+}
+
+void Src::maintenence()
+{
+    std::vector<uint8_t> disconnected = Motors::getDisconnected();
+    logDisconnected(disconnected);
+}
+
+void Src::driver()
+{
+    maintenence();
+    instance.driverCode();
+}
+
+void Src::auton()
+{
+    maintenence();
+    instance.autonCode();
 }
 
 void Src::setup()
 {
-    std::vector<uint8_t> disconnected = Motors::getDisconnected();
-    logDisconnected(disconnected);
+    maintenence();
 
     instance.setupCode();
 }

@@ -1,3 +1,7 @@
+#pragma once
+
+#include <string>
+
 #include "vex.h"
 #include "src.hpp"
 
@@ -7,6 +11,13 @@ public:
     static void log(std::string &message, Log level = Log::Info);
 
 private:
+    enum class Log
+    {
+        Error,
+        Info,
+        Debug
+    };
+
     static vex::brain brain;
 
     static const uint8_t MAX_COL = 5;

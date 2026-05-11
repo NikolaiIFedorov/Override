@@ -16,9 +16,8 @@ struct Init
 
 enum class Log
 {
-    Error,
+    Disconnected,
     Info,
-    Debug
 };
 
 class Src
@@ -42,4 +41,6 @@ private:
 
     static void log(std::string &msg, Log level = Log::Info);
     static void logDisconnected(std::vector<uint8_t> connections);
+
+    static void maintenence();
 };
