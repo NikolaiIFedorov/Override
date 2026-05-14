@@ -27,6 +27,22 @@ void Drivetrain::balance(float rightPct, float rightRpm, float leftPct, float le
         motors.setRpmScalar(unbalance, Motor::Type::Right);
 };
 
+void Drivetrain::updatePosition(float rightRpm, float leftRpm)
+{
+    auto now = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed = now - lastPositionUpdate;
+    lastPositionUpdate = now;
+
+    double t = elapsed.count();
+
+    double forward = (rightRpm + leftRpm) / 2;
+    double turn = rightRpm - leftRpm;
+
+    x += forward * cos(r) * t;
+    y += forward * sin(r) * t;
+    r += turn * t;
+};
+
 void Drivetrain::drive()
 {
     float leftPct = velocity - rotate;
@@ -36,4 +52,6 @@ void Drivetrain::drive()
     float rightRpm = motors.spin(rightPct, Motor::Type::Right);
 
     balance(rightPct, rightRpm, leftPct, leftRpm);
+
+    updatePosition(rightRpm, leftRpm);
 };
